@@ -36,7 +36,7 @@ async def add_xp(userid: int, basexp: int, reason: str=""):
     return (total, levels_gained)
 
 # Add gold: applies multiplier and writes gold log; gold stored in char'gold'
-async def addgold(userid: int, basegold: int, reason: str=""):
+async def add_gold(userid: int, basegold: int, reason: str=""):
     char = await db.load_character(userid)
     if not char:
         return 0

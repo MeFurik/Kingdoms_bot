@@ -152,7 +152,7 @@ async def delete_creation_session(user_id: int):
     await db.commit()
 
 # purchases/admin logs/xp/gold logs
-async def addpurchase(userid: int, kind: str, amount: int):
+async def add_purchase(userid: int, kind: str, amount: int):
     async with aiosqlite.connect(DB_PATH) as db:
         await db.execute("INSERT INTO purchases (userid,kind,amount,createdat) VALUES (?,?,?,?)", (userid, kind, amount, int(time.time())))
         await db.commit()
