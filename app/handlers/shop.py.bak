@@ -10,23 +10,6 @@ from ..keyboards import shop_kb, stats_kb, profile_kb
 from ..config import SHOP_COSTS, PREMIUM_DAYS
 from ..states import ShopStates, CreateStates
 from ..utils import add_xp, add_gold
-try:
-    from aiogram.filters.state import StateFilter
-except Exception:
-    try:
-        from aiogram.fsm.filters import StateFilter
-    except Exception:
-        StateFilter = None
-
-try:
-    from aiogram.filters import CommandStart, Command
-except Exception:
-    try:
-        from aiogram.dispatcher.filters.builtin import CommandStart, Command
-    except Exception:
-        CommandStart = None
-        Command = None
-
 
 router = Router()
 

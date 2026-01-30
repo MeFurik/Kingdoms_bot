@@ -2,7 +2,11 @@ from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery, InputFile
 from aiogram.fsm.context import FSMContext
 from aiogram.filters import CommandStart
-from aiogram.fsm.filters import StateFilter
+try:
+    from aiogram.filters.state import StateFilter
+except Exception: 
+    from aiogram.fsm.filters import StateFilter
+
 import io
 
 from ..keyboards import start_kb, classes_kb, stats_kb

@@ -10,23 +10,6 @@ from ..visuals import generate_hero_card
 from ..keyboards import admin_panel_kb
 from ..states import AdminStates
 from ..config import ADMIN_IDS, DB_PATH
-try:
-    from aiogram.filters.state import StateFilter
-except Exception:
-    try:
-        from aiogram.fsm.filters import StateFilter
-    except Exception:
-        StateFilter = None
-
-try:
-    from aiogram.filters import CommandStart, Command
-except Exception:
-    try:
-        from aiogram.dispatcher.filters.builtin import CommandStart, Command
-    except Exception:
-        CommandStart = None
-        Command = None
-
 
 router = Router()
 
