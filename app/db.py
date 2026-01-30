@@ -149,7 +149,7 @@ async def load_creation_session(user_id: int) -> Optional[dict]:
 
 async def delete_creation_session(user_id: int):
     async with aiosqlite.connect(DB_PATH) as db:await db.execute("DELETE FROM creationsessions WHERE userid = ?", (userid,))
-        await db.commit()
+    await db.commit()
 
 # purchases/admin logs/xp/gold logs
 async def addpurchase(userid: int, kind: str, amount: int):

@@ -1,6 +1,10 @@
 from aiogram import Router, F
 from aiogram.types import Message, CallbackQuery, InputFile
 from aiogram.fsm.context import FSMContext
+from aiogram.filters import CommandStart
+from aiogram.fsm.filters import StateFilter
+import io
+
 from ..keyboards import start_kb, classes_kb, stats_kb
 from ..db import save_creation_session, load_creation_session, delete_creation_session, save_character
 from ..visuals import generate_hero_card
@@ -21,7 +25,7 @@ def build_creation_text(session):
     lines.append("Нажимайте + / - для изменения. После заполнения нажмите Подтвердить.")
     return "\n".join(lines)
 
-@router.message(F.text, F.chat.type == "private", commands=["start"])
+@router.message(CommandStart(), F.chat.type == "private")
 async def cmd_start(message: Message):
     caption = "Привет! Нажми Создать персонажа чтобы начать."
     if WELCOME_IMG:
@@ -47,7 +51,7 @@ async def cb_class(callback: CallbackQuery, state: FSMContext):
     await callback.message.edit_text(f"Выбрано: {cls}\nВведите ник (до 32 символов):")
     await state.set_state("waiting_nick")
 
-@router.message(F.chat.type=="private", state="waiting_nick")
+@router.message(F.chat.type == "private", StateFilter("waiting_nick"))
 async def process_nick(message: Message, state: FSMContext):
     uid = message.from_user.id
     nick = (message.text or "").strip()[:32]
@@ -81,15 +85,15 @@ async def cb_stat_change(callback: CallbackQuery):
     _, stat, action = callback.data.split(":")
     if action=="inc":
         if session["points_left"]<=0:
-            await callback.answer("Очки закончились", show_alert=True); return
-        session["stats"][stat]+=1; session["points_left"]-=1
+            await callback.answer("Очки закончились", show_alert=True); returnsession["stats"][stat]+=1; session["points_left"]-=1
     else:
         if session["stats"][stat]<=0:
             await callback.answer("Нельзя уменьшить ниже 0", show_alert=True); return
         session["stats"][stat]-=1; session["points_left"]+=1
     await save_creation_session(uid, session)
     text = build_creation_text(session)
-    try:await callback.bot.edit_message_text(text, chat_id=session["ui_chat_id"], message_id=session["ui_message_id"], reply_markup=stats_kb())
+    try:
+        await callback.bot.edit_message_text(text, chat_id=session["ui_chat_id"], message_id=session["ui_message_id"], reply_markup=stats_kb())
     except:
         await callback.message.edit_text(text, reply_markup=stats_kb())
 

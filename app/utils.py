@@ -16,7 +16,7 @@ async def add_xp(userid: int, basexp: int, reason: str=""):
         return (0,0)
     ispremiumflag = await ispremiumuser(char)
     mult = premiummultiplier(ispremiumflag)
-    total = int(base_xp  mult)
+    total = int(base_xp * mult)
     bonus = total - base_xp
     # update character xp
     new_xp = (char.get("xp",0) or 0) + total
@@ -29,7 +29,7 @@ async def add_xp(userid: int, basexp: int, reason: str=""):
         levels_gained += 1
         # optionally scale xp_to_next per level (here keep constant 1000)
         # xp_to_next could be char['xp_to_next'] = int(xp_to_next  1.1)
-    char"xp" = new_xp
+    char["xp"] = new_xp
     char["xp_to_next"] = xp_to_next
     await db.save_character(userid, char)
     await db.addxplog(userid, basexp, bonus, total, reason or "auto")
@@ -44,7 +44,7 @@ async def addgold(userid: int, basegold: int, reason: str=""):
     mult = premiummultiplier(ispremiumflag)
     total = int(basegold * mult)
     bonus = total - basegold
-    char"gold" = (char.get("gold",0) or 0) + total
+    char["gold"] = (char.get("gold",0) or 0) + total
     await db.save_character(userid, char)
     await db.addgoldlog(userid, basegold, bonus, total, reason or "auto")
     return total
