@@ -1,0 +1,26 @@
+version: "3.8"
+services:
+  redis:
+    image: redis:6-alpine
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    ports:
+      - "6379:6379"
+
+  bot:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      - redis
+    environment:
+      - TG_BOT_TOKEN=${TG_BOT_TOKEN}
+      - REDIS_DSN=redis://redis:6379/0
+      - DB_PATH=/data/game.db
+      - ADMIN_IDS=${ADMIN_IDS}
+    volumes:
+      - ./assets:/app/assets
+      - ./data:/data
+
+volumes:
+  redis_data:
